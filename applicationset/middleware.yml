@@ -7,8 +7,8 @@ spec:
   project: default
   source:
     repoURL: >- 
-      https://dev.azure.com/coorb/Islamic%20Banking/_git/gitOps
-    targetRevision: master
+      https://github.com/Hiren205/iamaccess.git
+    targetRevision: main
     path: Applications/aws/applications/middleware
   destination:
     server: https://kubernetes.default.svc
