@@ -1,0 +1,18 @@
+# Dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install deps first (better layer caching — only reruns on package.json changes)
+COPY package*.json ./
+RUN npm install --omit=dev
+
+# Copy app source
+COPY index.js ./
+
+# Run as non-root (alpine's node image ships a 'node' user)
+USER node
+
+EXPOSE 8090
+
+CMD ["node", "index.js"]

@@ -20,8 +20,8 @@ spec:
         - /spec/replicas
   syncPolicy:
     managedNamespaceMetadata:
-    labels:
-      kubernetes.io/metadata.name: neof-aws 
+      labels:
+        kubernetes.io/metadata.name: neof-aws
     syncOptions:
       - CreateNamespace=true
       - RespectIgnoreDifferences=true
