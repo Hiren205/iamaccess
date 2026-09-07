@@ -1,0 +1,16 @@
+{
+    "name": "express-crud-demo",
+    "version": "1.0.0",
+    "description": "Demo CRUD API on EKS Fargate",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js",
+      "dev": "node --watch app.js"
+    },
+    "dependencies": {
+      "express": "^4.19.2"
+    },
+    "engines": {
+      "node": ">=20"
+    }
+  }

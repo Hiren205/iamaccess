@@ -1,0 +1,82 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: middleware-netpol
+  namespace: neof-aws
+  labels:
+    app: middleware
+    app.kubernetes.io/name: middleware
+    app.kubernetes.io/part-of: neof-aws
+spec:
+  podSelector:
+    matchLabels:
+      app: middleware
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8090
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: neof-aws
+      ports:
+        - port: 8090
+          protocol: TCP
+  egress:
+    # Allow DNS resolution (kube-dns)
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # Allow PostgreSQL / rds postgres (TCP:5432)
+    - ports:
+        - port: 5432
+          protocol: TCP
+    # Allow HTTPS for all external integrations
+    # (Simah, Eiger, Masdr, Nafith, Nafath, Emdah, Edaat, Dakhli,
+    #  Fingerprint, Absher, Natheer, Mobile Verification, IBAN,
+    #  GCP Secret Manager, Artifact Registry, KMS)
+    - ports:
+        - port: 443
+          protocol: TCP
+    # Allow HTTP to internal cluster services (Keycloak, Fineract, DMS, Workflow, Decision Engine)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: neof-aws
+    # Allow Keycloak on port 9000
+    - ports:
+        - port: 9000
+          protocol: TCP
+    # Allow Fineract on port 8443
+    - ports:
+        - port: 8443
+          protocol: TCP
+    # Allow DMS on port 9001
+    - ports:
+        - port: 9001
+          protocol: TCP
+    # Allow Decision Engine on port 8091
+    - ports:
+        - port: 8091
+          protocol: TCP
+    # Allow Workflow Engine on port 9002
+    - ports:
+        - port: 9002
+          protocol: TCP
+    # Allow StaffUI on port 3001
+    - ports:
+        - port: 3001
+          protocol: TCP
+    # Allow Bank API on port 8080
+    - ports:
+        - port: 8080
+          protocol: TCP

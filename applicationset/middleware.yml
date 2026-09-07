@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: middleware
+  namespace: argocd-aws
+spec:
+  project: default
+  source:
+    repoURL: >- 
+      https://dev.azure.com/coorb/Islamic%20Banking/_git/gitOps
+    targetRevision: master
+    path: Applications/aws/applications/middleware
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: neof-aws
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+  syncPolicy:
+    managedNamespaceMetadata:
+    labels:
+      kubernetes.io/metadata.name: neof-aws 
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+      - PrunePropagationPolicy=orphaned
+      - ApplyOutOfSyncOnly=true
+      - PreserveResourcesOnDeletion=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s

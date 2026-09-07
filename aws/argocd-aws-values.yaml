@@ -1,0 +1,53 @@
+# ArgoCD/aws/argocd-demo-values.yaml
+
+global:
+  domain: ""              # no domain for demo
+
+configs:
+  params:
+    server.insecure: true # TLS terminated at ALB — same as your GCP setup
+  cm:
+    accounts.developer: login
+  rbac:
+    policy.csv: |
+      # Define Role 1: Dev Sync (Can view and deploy apps in default project)
+      p, role:dev-sync, applications, get, default/*, allow
+      p, role:dev-sync, applications, sync, default/*, allow
+
+      # Define Role 2: Infra Viewer (Can view cluster resources globally)
+      p, role:infra-viewer, clusters, get, *, allow
+      p, role:infra-viewer, repositories, get, *, allow
+
+      # Bind both roles to your developer account
+      g, developer, role:dev-sync
+      g, developer, role:infra-viewer
+server:
+  replicas: 1             # was 2 in npr, 3 in prod — demo needs only 1
+  autoscaling:
+    enabled: false
+  service:
+    type: NodePort        # needed for ALB to reach ArgoCD UI
+    nodePortHttp: 30080
+    nodePortHttps: 30443
+  ingress:
+    enabled: false        # we use port-forward for demo — no domain
+
+redis-ha:
+  enabled: false          # was true in prod — not needed for demo
+
+redis:
+  enabled: true           # single redis is fine for demo
+
+controller:
+  replicas: 1
+
+
+
+
+repoServer:
+  replicas: 1             # was 2 in npr, 3 in prod
+  autoscaling:
+    enabled: false
+
+applicationSet:
+  replicas: 1             # was 2 in npr, 3 in prod
