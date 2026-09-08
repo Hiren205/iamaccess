@@ -28,7 +28,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: middleware
-          image: 797336051996.dkr.ecr.eu-north-1.amazonaws.com/app:2
+          image: 797336051996.dkr.ecr.eu-north-1.amazonaws.com/app:3
           imagePullPolicy: Always
           ports:
             - name: http
