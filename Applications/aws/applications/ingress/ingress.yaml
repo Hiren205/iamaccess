@@ -1,0 +1,9 @@
+controller:
+  ingressClass: nginx-shared
+  ingressClassResource:
+    name: nginx-shared
+    controllerValue: "k8s.io/nginx-shared"
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
