@@ -50,8 +50,8 @@ grafana:
       cpu: 100m
       memory: 128Mi
     limits:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 300m
+      memory: 512Mi
   service:
     type: ClusterIP                    # access via port-forward for demo
 
