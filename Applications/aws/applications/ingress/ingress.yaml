@@ -7,8 +7,3 @@ controller:
     type: LoadBalancer
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: true
-      namespace: neof-ingress
