@@ -1,0 +1,62 @@
+# Demo-sized values for kube-prometheus-stack on EKS
+# Not production-tuned: short retention, small storage, no HA.
+
+prometheus:
+  prometheusSpec:
+    retention: 6h                     # keep metrics for 6 hours only (demo)
+    # Pick up ServiceMonitors from ALL namespaces, regardless of labels.
+    # Without this, Prometheus only scrapes monitors matching the chart's
+    # own release labels, which trips people up when "nothing shows up".
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3        # default EKS StorageClass; use gp3 if you've set it up
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+    storage: {}                        # ephemeral for demo, no PVC
+
+grafana:
+  enabled: true
+  adminPassword: "demo-admin-pw"       # CHANGE this, or better: use --set on the CLI instead of committing it
+  persistence:
+    enabled: false                     # ephemeral for demo; dashboards reset on pod restart
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  service:
+    type: ClusterIP                    # access via port-forward for demo
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true

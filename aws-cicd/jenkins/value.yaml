@@ -1,0 +1,20 @@
+controller:
+  serviceType: ClusterIP     # accessed via port-forward, matching your ArgoCD setup
+  resources:
+    requests: { cpu: 250m, memory: 1Gi }
+    limits:   { cpu: "1",  memory: 2Gi }
+  ingress:
+    enabled: false
+
+persistence:
+  enabled: true
+  size: 20Gi
+
+serviceAccount:
+  create: true
+  name: jenkins
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::797336051996:role/jenkins-irsa-role"
+
+agent:
+  enabled: true   # built-in Kubernetes plugin — spawns ephemeral pod agents per build
